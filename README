@@ -7,3 +7,7 @@ in the current directory.  Takes no argument.
 
    ckcharset: Takes filename of character set bitmap as argument and prints
 out the Unicode names of all of the characters in the character set.
+
+You need to have installed the ucsdata library from dev-libs in order to
+build these tools.
+

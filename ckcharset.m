@@ -23,8 +23,8 @@
 
 #import <Foundation/Foundation.h>
 #include <stdio.h>
-#import "GSUnicodeData.h"
-#import "GSUniChar.h"
+#import <libgnustep-ucsdata/GSUnicodeData.h>
+#import <libgnustep-ucsdata/GSUniChar.h>
 
 int main(int argc, char *argv[])
 {

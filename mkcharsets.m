@@ -22,8 +22,8 @@
 */
 
 #import <Foundation/Foundation.h>
-#import "GSUnicodeData.h"
-#import "GSUniChar.h"
+#import <libgnustep-ucsdata/GSUnicodeData.h>
+#import <libgnustep-ucsdata/GSUniChar.h>
 
 int main(int argc, char *argv[])
 {
@@ -179,6 +179,8 @@ int main(int argc, char *argv[])
   // Add lines breaks: CR and LF
   [whiteSet addCharactersInRange: NSMakeRange(0x0A, 1)];
   [whiteSet addCharactersInRange: NSMakeRange(0x0D, 1)];
+  // Also nextline
+  [whiteSet addCharactersInRange: NSMakeRange(0x85, 1)];
 
   bitmap = [whiteSet bitmapRepresentation];
   [bitmap writeToFile: @"whitespaceAndNlCharSet.dat" atomically: NO];
