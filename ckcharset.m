@@ -32,7 +32,6 @@ int main(int argc, char *argv[])
   NSProcessInfo *processInfo = [NSProcessInfo processInfo];
   NSArray *args;
   GSUnicodeData *ud;
-  GSUniChar *ucdEntry;
   NSCharacterSet *charSet;
   unichar ch;
 

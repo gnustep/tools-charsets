@@ -25,8 +25,10 @@ GNUSTEP_MAKEFILES=$(GNUSTEP_SYSTEM_ROOT)/Makefiles
 
 include $(GNUSTEP_MAKEFILES)/common.make
 
-TOOL_NAME = mkcharsets ckcharset
+TOOL_NAME = mkcharsets data2header ckcharset
+
 mkcharsets_OBJC_FILES = mkcharsets.m
+data2header_OBJC_FILES = data2header.m
 ckcharset_OBJC_FILES = ckcharset.m
 
 -include GNUmakefile.preamble
