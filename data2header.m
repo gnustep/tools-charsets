@@ -47,6 +47,7 @@ main(int argc, char **argv)
       char	name[BUFSIZ];
       int	j;
       int	sep = '{';
+      long	len;
 
       strcpy(name, argv[i]);
       j = strlen(name) - 4;
@@ -61,8 +62,24 @@ main(int argc, char **argv)
 	  fprintf(stderr, "Unable to read '%s'\n", name);
 	  return 1;
 	}
+      if (fseek(f, 0, SEEK_END) != 0)
+	{
+	  fprintf(stderr, "Unable to seek to end of '%s'\n", name);
+	  return 1;
+	}
+      len = ftell(f);
+      if (fseek(f, 0, SEEK_SET) != 0)
+	{
+	  fprintf(stderr, "Unable to seek to start of '%s'\n", name);
+	  return 1;
+	}
+      if (len == 0 || len % 8192 != 0)
+	{
+	  fprintf(stderr, "Length of '%s' is not a multiple of 8192\n", name);
+	  return 1;
+	}
       name[j] = '\0';
-      fprintf(o, "static unsigned char %s[8192] = ", name);
+      fprintf(o, "static const unsigned char %s[%d] = ", name, len);
       while ((c = fgetc(f)) != EOF)
 	{
 	  fprintf(o, "%c\n'\\x%02x'", sep, c);

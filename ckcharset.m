@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
   NSArray *args;
   GSUnicodeData *ud;
   NSCharacterSet *charSet;
-  unichar ch;
+  UTF32Char ch;
 
   args = [processInfo arguments];
   if ([args count] != 2)
@@ -52,9 +52,9 @@ int main(int argc, char *argv[])
     }
 
   charSet = [NSCharacterSet characterSetWithContentsOfFile: [args objectAtIndex: 1]];
-  for (ch = 0; ch < 0xffff; ch++)
+  for (ch = 0; ch < MAX_UNICHAR; ch++)
     {
-      if ([charSet characterIsMember: ch])
+      if ([charSet longCharacterIsMember: ch])
         {
           GSUniChar *ucdEntry = [ud entryForCharacter: ch];
           printf("%s\n", [[ucdEntry name] cString]);
