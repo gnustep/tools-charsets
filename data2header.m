@@ -41,13 +41,26 @@ main(int argc, char **argv)
       return 1;
     }
   o = fopen("NSCharacterSetData.h", "w");
+  fprintf(o, "/*\n");
+  fprintf(o, " * THIS FILE WAS GENERATED AUTOMATICALLY BY data2header.m\n");
+  fprintf(o, " * PLEASE DO NOT EDIT IT DIRECTLY.\n");
+  fprintf(o, " * You can find data2header.m at\n");
+  fprintf(o, " * http://svn.gna.org/viewcvs/gnustep/tools/charsets/\n");
+  fprintf(o, " * The characterset rule tables for Unicode handling are\n");
+  fprintf(o, " * really rather large, so the bitmaps are converted into\n");
+  fprintf(o, " * constant data compiled into the GNUstep base library\n");
+  fprintf(o, " * and are therefore shared between all running GNUstep\n");
+  fprintf(o, " * applications, reducing the overall memory usage of a\n");
+  fprintf(o, " * gnustep system and speeding up startup of GNUstep\n");
+  fprintf(o, " * processes.\n");
+  fprintf(o, " */\n");
   for (i = 1; i < argc; i++)
     {
       FILE	*f;
       char	name[BUFSIZ];
       int	j;
       int	sep = '{';
-      long	len;
+      int	len;
 
       strcpy(name, argv[i]);
       j = strlen(name) - 4;

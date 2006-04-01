@@ -21,7 +21,9 @@
 #  Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111 USA
 #
 
-GNUSTEP_MAKEFILES=$(GNUSTEP_SYSTEM_ROOT)/Makefiles
+ifeq ($(GNUSTEP_MAKEFILES),)
+  $(error You need to run the GNUstep configuration script before compiling!)
+endif
 
 include $(GNUSTEP_MAKEFILES)/common.make
 

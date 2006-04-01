@@ -38,7 +38,11 @@ int main(int argc, char *argv[])
   NSString *decompMap;
   NSData *bitmap;
 
-  ud = [GSUnicodeData unicodeData];
+  ud = [GSUnicodeData dataWithContentsOfFile: @"UnicodeData.txt"];
+  if (ud == nil)
+    {
+      ud = [GSUnicodeData unicodeData];
+    }
   if (ud == nil)
     {
       NSLog(@"Error getting Unicode database object.");
