@@ -130,6 +130,12 @@ int main(int argc, char *argv[])
         [decompSet addCharactersInRange: range];
     }
 
+  /*
+   * We know the two private use planes are not illegal ...
+   */
+  [illegalSet removeCharactersInRange: NSMakeRange(0xf0000,0xfffd)];
+  [illegalSet removeCharactersInRange: NSMakeRange(0x100000,0xfffd)];
+
   [letterSet formUnionWithCharacterSet: lCaseSet];
   [letterSet formUnionWithCharacterSet: uCaseSet];
   [letterSet formUnionWithCharacterSet: tCaseSet];
