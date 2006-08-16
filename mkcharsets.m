@@ -72,7 +72,12 @@ int main(int argc, char *argv[])
       NSRange range = [ucdEntry range];
       UCDGeneralCategory category = [ucdEntry generalCategory];
 
-      [illegalSet removeCharactersInRange: range];
+      /* If it's an assigned character, remove it from the illegal set.
+       */
+      if (category != UCDNotAssignedCategory)
+        {
+          [illegalSet removeCharactersInRange: range];
+	}
 
       switch (category)
         {
@@ -101,6 +106,7 @@ int main(int argc, char *argv[])
             [whiteSet addCharactersInRange: range];
             break;
           case UCDControlCategory:
+          case UCDFormatCategory:
             [controlSet addCharactersInRange: range];
             break;
           case UCDNumberDecimalDigitCategory:
@@ -124,10 +130,9 @@ int main(int argc, char *argv[])
           case UCDSymbolOtherCategory:
             [symbolSet addCharactersInRange: range];
             break;
-	  case UCDNotAssignedCategory:
-	  case UCDFormatCategory:
 	  case UCDSurrogateCategory:
 	  case UCDPrivateUseCategory:
+	  case UCDNotAssignedCategory:
 	    break;
         }
 
