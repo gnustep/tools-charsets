@@ -1,8 +1,9 @@
 /* mkcharsets.m: A utility to create bitmaps for the standard character sets.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001,2006 Free Software Foundation, Inc.
 
    Written by:  Jonathan Gapen  <jagapen@home.com>
    Date: March 2001
+   Update by: Richard Frith-Macdonald <rfm@gnu.org>
 
    This file is part of GNUstep.
 
@@ -34,7 +35,7 @@ int main(int argc, char *argv[])
   NSMutableCharacterSet *alnumSet, *controlSet, *dDigitSet, *decompSet;
   NSMutableCharacterSet *illegalSet, *letterSet, *lCaseSet, *nonBaseSet;
   NSMutableCharacterSet *puncSet, *symbolSet, *tCaseSet, *uCaseSet;
-  NSMutableCharacterSet *whiteNlSet, *whiteSet;
+  NSMutableCharacterSet *whiteSet;
   NSString *decompMap;
   NSData *bitmap;
 
@@ -68,7 +69,7 @@ int main(int argc, char *argv[])
   enumerator = [ud objectEnumerator];
   while ((ucdEntry = [enumerator nextObject]))
     {
-      NSRange range = NSMakeRange([ucdEntry character], 1);
+      NSRange range = [ucdEntry range];
       UCDGeneralCategory category = [ucdEntry generalCategory];
 
       [illegalSet removeCharactersInRange: range];
@@ -123,18 +124,17 @@ int main(int argc, char *argv[])
           case UCDSymbolOtherCategory:
             [symbolSet addCharactersInRange: range];
             break;
+	  case UCDNotAssignedCategory:
+	  case UCDFormatCategory:
+	  case UCDSurrogateCategory:
+	  case UCDPrivateUseCategory:
+	    break;
         }
 
       decompMap = [ucdEntry decompositionMapping];
       if ([decompMap isEqualToString: @""] == NO)
         [decompSet addCharactersInRange: range];
     }
-
-  /*
-   * We know the two private use planes are not illegal ...
-   */
-  [illegalSet removeCharactersInRange: NSMakeRange(0xf0000,0xfffd)];
-  [illegalSet removeCharactersInRange: NSMakeRange(0x100000,0xfffd)];
 
   [letterSet formUnionWithCharacterSet: lCaseSet];
   [letterSet formUnionWithCharacterSet: uCaseSet];
