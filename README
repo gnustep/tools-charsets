@@ -11,6 +11,8 @@ NSCharacterSet Utilities
    data2header: Takes the bitmaps produced by mkcharsets and generates a
 		header file for use by NSCharacterSet.m ... which should
 		be copied into core/base/Source.
+		This contains two alternative representations of each
+		characterset, one as a bitmap, and one as a list of ranges.
 
    ckcharset:	Takes filename of character set bitmap as argument and
 		prints out the Unicode names of all of the characters in

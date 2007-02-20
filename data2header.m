@@ -58,6 +58,9 @@ main(int argc, char **argv)
     {
       FILE	*f;
       char	name[BUFSIZ];
+      int	findingLocation = 1;
+      unsigned	location;
+      unsigned	length;
       int	j;
       int	sep = '{';
       int	len;
@@ -92,13 +95,85 @@ main(int argc, char **argv)
 	  return 1;
 	}
       name[j] = '\0';
+
+      fprintf(o, "#if defined(GNUSTEP_INDEX_CHARSET)\n");
+      fprintf(o, "static const unsigned int %s[] = ", name);
+      j = 0;
+      while ((c = fgetc(f)) != EOF)
+	{
+	  unsigned char	byte = (unsigned char)c;
+
+	  if (byte == 0)
+	    {
+	      if (findingLocation == 0)
+		{
+		  length = j - location;
+		  fprintf(o, "%c\n%u,%u", sep, location, length);
+		  sep = ',';
+		  findingLocation = 1;
+		}
+	      j += 8;
+	    }
+	  else if (byte == 0xff)
+	    {
+	      if (findingLocation == 1)
+		{
+		  location = j;
+		  findingLocation = 0;
+		}
+	      j += 8;
+	    }
+	  else
+	    {
+	      unsigned int	bit;
+
+	      for (bit = 1; bit & 0xff; bit <<= 1)
+		{
+		  if ((byte & bit) == 0)
+		    {
+		      if (findingLocation == 0)
+			{
+			  length = j - location;
+			  fprintf(o, "%c\n%u,%u", sep, location, length);
+			  sep = ',';
+			  findingLocation = 1;
+			}
+		    }
+		  else
+		    {
+		      if (findingLocation == 1)
+			{
+			  location = j;
+			  findingLocation = 0;
+			}
+		    }
+		  j++;
+		}
+	    }
+	}
+      if (findingLocation == 0)
+	{
+	  length = j - location;
+	  fprintf(o, "%c\n%u,%u", sep, location, length);
+	  sep = ',';
+	}
+      fprintf(o,"};\n");
+      fprintf(o, "#else /* GNUSTEP_INDEX_CHARSET */\n");
+      if (fseek(f, 0, SEEK_SET) != 0)
+	{
+	  fprintf(stderr, "Unable to seek back to start of file\n");
+	  return 1;
+	}
       fprintf(o, "static const unsigned char %s[%d] = ", name, len);
+      sep = '{';
       while ((c = fgetc(f)) != EOF)
 	{
 	  fprintf(o, "%c\n'\\x%02x'", sep, c);
 	  sep = ',';
 	}
       fprintf(o,"};\n");
+      fprintf(o, "#endif /* GNUSTEP_INDEX_CHARSET */\n");
+
       fclose(f);
     }
   fclose(o);
