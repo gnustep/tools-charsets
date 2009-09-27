@@ -97,7 +97,7 @@ main(int argc, char **argv)
       name[j] = '\0';
 
       fprintf(o, "#if defined(GNUSTEP_INDEX_CHARSET)\n");
-      fprintf(o, "static const unsigned int %s[] = ", name);
+      fprintf(o, "static const NSRange %s[] = ", name);
       j = 0;
       while ((c = fgetc(f)) != EOF)
 	{
@@ -108,7 +108,7 @@ main(int argc, char **argv)
 	      if (findingLocation == 0)
 		{
 		  length = j - location;
-		  fprintf(o, "%c\n%u,%u", sep, location, length);
+		  fprintf(o, "%c\n{%u,%u}", sep, location, length);
 		  sep = ',';
 		  findingLocation = 1;
 		}
@@ -134,7 +134,7 @@ main(int argc, char **argv)
 		      if (findingLocation == 0)
 			{
 			  length = j - location;
-			  fprintf(o, "%c\n%u,%u", sep, location, length);
+			  fprintf(o, "%c\n{%u,%u}", sep, location, length);
 			  sep = ',';
 			  findingLocation = 1;
 			}
@@ -154,7 +154,7 @@ main(int argc, char **argv)
       if (findingLocation == 0)
 	{
 	  length = j - location;
-	  fprintf(o, "%c\n%u,%u", sep, location, length);
+	  fprintf(o, "%c\n{%u,%u}", sep, location, length);
 	  sep = ',';
 	}
       fprintf(o,"};\n");
