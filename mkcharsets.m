@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
   NSMutableCharacterSet *alnumSet, *controlSet, *dDigitSet, *decompSet;
   NSMutableCharacterSet *illegalSet, *letterSet, *lCaseSet, *nonBaseSet;
   NSMutableCharacterSet *puncSet, *symbolSet, *tCaseSet, *uCaseSet;
-  NSMutableCharacterSet *whiteSet;
+  NSMutableCharacterSet *whiteSet, *newlineSet;
   NSString *decompMap;
   NSData *bitmap;
 
@@ -65,6 +65,7 @@ int main(int argc, char *argv[])
   uCaseSet = [NSMutableCharacterSet new];
   tCaseSet = [NSMutableCharacterSet new];
   whiteSet = [NSMutableCharacterSet new];
+  newlineSet = [NSMutableCharacterSet new];
 
   enumerator = [ud objectEnumerator];
   while ((ucdEntry = [enumerator nextObject]))
@@ -192,10 +193,15 @@ int main(int argc, char *argv[])
   [bitmap writeToFile: @"whitespaceCharSet.dat" atomically: NO];
 
   // Add lines breaks: CR and LF
-  [whiteSet addCharactersInRange: NSMakeRange(0x0A, 1)];
-  [whiteSet addCharactersInRange: NSMakeRange(0x0D, 1)];
+  [newlineSet addCharactersInRange: NSMakeRange(0x0A, 1)];
+  [newlineSet addCharactersInRange: NSMakeRange(0x0D, 1)];
   // Also nextline
-  [whiteSet addCharactersInRange: NSMakeRange(0x85, 1)];
+  [newlineSet addCharactersInRange: NSMakeRange(0x85, 1)];
+
+  bitmap = [newlineSet bitmapRepresentation];
+  [bitmap writeToFile: @"newlineCharSet.dat" atomically: NO];
+
+  [whiteSet formUnionWithCharacterSet: newlineSet];
 
   bitmap = [whiteSet bitmapRepresentation];
   [bitmap writeToFile: @"whitespaceAndNlCharSet.dat" atomically: NO];
