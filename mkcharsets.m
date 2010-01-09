@@ -192,9 +192,8 @@ int main(int argc, char *argv[])
   bitmap = [whiteSet bitmapRepresentation];
   [bitmap writeToFile: @"whitespaceCharSet.dat" atomically: NO];
 
-  // Add lines breaks: CR and LF
-  [newlineSet addCharactersInRange: NSMakeRange(0x0A, 1)];
-  [newlineSet addCharactersInRange: NSMakeRange(0x0D, 1)];
+  // Add lines breaks: CR, VT, FF and LF
+  [newlineSet addCharactersInRange: NSMakeRange(0x0A, 4)];
   // Also nextline
   [newlineSet addCharactersInRange: NSMakeRange(0x85, 1)];
 
