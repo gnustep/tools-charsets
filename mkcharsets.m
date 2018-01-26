@@ -188,6 +188,8 @@ int main(int argc, char *argv[])
 
   // Unicode calls tab a control character; we call it whitespace
   [whiteSet addCharactersInRange: NSMakeRange(0x09, 1)];
+  // Unicode calls zero-width-sapce a control character; we call it whitespace
+  [whiteSet addCharactersInRange: NSMakeRange(0x200B, 1)];
 
   bitmap = [whiteSet bitmapRepresentation];
   [bitmap writeToFile: @"whitespaceCharSet.dat" atomically: NO];
