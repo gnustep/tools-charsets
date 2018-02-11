@@ -31,9 +31,13 @@
 int
 main(int argc, char **argv)
 {
-  int	i;
-  int	c;
-  FILE	*o;
+  /* If we want output to be a character/range per line we set eol to "\n",
+   * otherwise (normally) the output is an entire characterset on one line.
+   */
+  const char    *eol = "";
+  int	        i;
+  int	        c;
+  FILE	        *o;
 
   if (argc < 2)
     {
@@ -108,7 +112,7 @@ main(int argc, char **argv)
 	      if (findingLocation == 0)
 		{
 		  length = j - location;
-		  fprintf(o, "%c\n{%u,%u}", sep, location, length);
+		  fprintf(o, "%c%s{%u,%u}", sep, eol, location, length);
 		  sep = ',';
 		  findingLocation = 1;
 		}
@@ -134,7 +138,7 @@ main(int argc, char **argv)
 		      if (findingLocation == 0)
 			{
 			  length = j - location;
-			  fprintf(o, "%c\n{%u,%u}", sep, location, length);
+			  fprintf(o, "%c%s{%u,%u}", sep, eol, location, length);
 			  sep = ',';
 			  findingLocation = 1;
 			}
@@ -154,7 +158,7 @@ main(int argc, char **argv)
       if (findingLocation == 0)
 	{
 	  length = j - location;
-	  fprintf(o, "%c\n{%u,%u}", sep, location, length);
+	  fprintf(o, "%c%s{%u,%u}", sep, eol, location, length);
 	  sep = ',';
 	}
       fprintf(o,"};\n");
@@ -168,7 +172,7 @@ main(int argc, char **argv)
       sep = '{';
       while ((c = fgetc(f)) != EOF)
 	{
-	  fprintf(o, "%c\n'\\x%02x'", sep, c);
+	  fprintf(o, "%c%s'\\x%02x'", sep, eol, c);
 	  sep = ',';
 	}
       fprintf(o,"};\n");
