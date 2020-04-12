@@ -93,9 +93,9 @@ main(int argc, char **argv)
 	  fprintf(stderr, "Unable to seek to start of '%s'\n", name);
 	  return 1;
 	}
-      if (len == 0 || len % 8192 != 0)
+      if (len == 0)
 	{
-	  fprintf(stderr, "Length of '%s' is not a multiple of 8192\n", name);
+	  fprintf(stderr, "Length of '%s' zero ... ignored\n", name);
 	  return 1;
 	}
       name[j] = '\0';
