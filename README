@@ -21,3 +21,9 @@ NSCharacterSet Utilities
 You need to have installed the ucsdata library from dev-libs in order to
 build these tools.
 
+For a new release of the gnustep-base library, the maintainer should get the
+latest UnicodeData.txt file and run mkcharsets to produce data files for all
+the standard charactersets, then run data2header giving it all those data file
+names so that it will produce the header file for the base library.
+
+UnicodeData.txt
