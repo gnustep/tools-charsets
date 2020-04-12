@@ -26,6 +26,27 @@
 #import <libgnustep-ucsdata/GSUnicodeData.h>
 #import <libgnustep-ucsdata/GSUniChar.h>
 
+@implementation	NSCharacterSet (String)
+- (NSString*) stringRepresentation
+{
+  NSMutableString	*m = [NSMutableString stringWithCapacity: 128];
+  unichar		c;
+
+  for (c = 0; c < 128; c++)
+    {
+      if ([self characterIsMember: c])
+	{
+	  NSString	*s;
+
+	  s = [[NSString alloc] initWithCharacters: &c length: 1];
+	  [m appendString: s];
+	  RELEASE(s);
+	}
+    }
+  return m;
+}
+@end
+
 int main(int argc, char *argv[])
 {
   NSAutoreleasePool *arp = [NSAutoreleasePool new];
@@ -36,9 +57,37 @@ int main(int argc, char *argv[])
   NSMutableCharacterSet *illegalSet, *letterSet, *lCaseSet, *nonBaseSet;
   NSMutableCharacterSet *puncSet, *symbolSet, *tCaseSet, *uCaseSet;
   NSMutableCharacterSet *whiteSet, *newlineSet;
+  NSCharacterSet *u;
   NSString *decompMap;
   NSData *bitmap;
-
+ 
+  /* First we can generate well known charactersets which use only ascii
+   * and don't require unicode data.
+   */
+  u = [NSCharacterSet characterSetWithCharactersInString: @"i!$&'()*+,-./0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~"];
+  bitmap = [u bitmapRepresentation];
+  [bitmap writeToFile: @"URLFragmentAllowedCharSet.dat" atomically: NO];
+ 
+  u = [NSCharacterSet characterSetWithCharactersInString: @"!$&'()*+,-.0123456789:;=ABCDEFGHIJKLMNOPQRSTUVWXYZ[]_abcdefghijklmnopqrstuvwxyz~"];
+  bitmap = [u bitmapRepresentation];
+  [bitmap writeToFile: @"URLHostAllowedCharSet.dat" atomically: NO];
+ 
+  u = [NSCharacterSet characterSetWithCharactersInString: @"!$&'()*+,-.0123456789;=ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~"];
+  bitmap = [u bitmapRepresentation];
+  [bitmap writeToFile: @"URLPasswordAllowedCharSet.dat" atomically: NO];
+ 
+  u = [NSCharacterSet characterSetWithCharactersInString: @"!$&'()*+,-./0123456789:=@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~"];
+  bitmap = [u bitmapRepresentation];
+  [bitmap writeToFile: @"URLPathAllowedCharSet.dat" atomically: NO];
+ 
+  u = [NSCharacterSet characterSetWithCharactersInString: @"!$&'()*+,-./0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~"];
+  bitmap = [u bitmapRepresentation];
+  [bitmap writeToFile: @"URLQueryAllowedCharSet.dat" atomically: NO];
+ 
+  u = [NSCharacterSet characterSetWithCharactersInString: @"!$&'()*+,-.0123456789;=ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~"];
+  bitmap = [u bitmapRepresentation];
+  [bitmap writeToFile: @"URLUserAllowedCharSet.dat" atomically: NO];
+ 
   ud = [GSUnicodeData dataWithContentsOfFile: @"UnicodeData.txt"];
   if (ud == nil)
     {
@@ -188,7 +237,7 @@ int main(int argc, char *argv[])
 
   // Unicode calls tab a control character; we call it whitespace
   [whiteSet addCharactersInRange: NSMakeRange(0x09, 1)];
-  // Unicode calls zero-width-sapce a control character; we call it whitespace
+  // Unicode calls zero-width-space a control character; we call it whitespace
   [whiteSet addCharactersInRange: NSMakeRange(0x200B, 1)];
 
   bitmap = [whiteSet bitmapRepresentation];
